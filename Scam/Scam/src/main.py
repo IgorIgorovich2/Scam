@@ -33,3 +33,13 @@ async def get_username(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 async def forward_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     # Forward the received message to the specified chat
     await context.bot.forward_message(chat_id=1002384512914, from_chat_id=get_chat_id, message_id=update.message.message_id)
+
+
+# Message Handler
+
+async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    message_type: str = update.message.chat.type #says the type of chat
+    user = update.message.from_user
+    text: str = update.message.text
+
+    print(f'User ({update.message.chat.id}) in {message_type}: "{text}"  username: {user}')
