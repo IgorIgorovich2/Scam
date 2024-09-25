@@ -41,7 +41,7 @@ def handle_response(text:str) -> str:
     processed:str = text.lower()
     if 'негр' in processed:
         return 'bad boy, sent it'
-    
+
 
 # Message Handler
 
@@ -64,3 +64,27 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     print('Bot:', response)
     await update.message.reply_text(response)
+
+
+async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    print(f'Update {update} caused error {context.error}')
+
+
+if __name__ == '__main__':
+    app = Application.builder().token(TOKEN).build()
+
+    # Commands
+    app.add_handler(CommandHandler('start', start_command))
+    app.add_handler(CommandHandler('write', write_command))
+    app.add_handler(CommandHandler('help', help_command))
+    app.add_handler(CommandHandler("id", get_chat_id))  # Command to get chat ID
+
+    # Messages
+    app.add_handler(MessageHandler(filters.ALL, forward_message))
+
+    # Errors
+    app.add_error_handler(error_handler)
+
+    # polls the bot
+    print('Waiting for messages')
+    app.run_polling(poll_interval=3)
