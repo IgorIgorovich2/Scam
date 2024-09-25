@@ -35,6 +35,14 @@ async def forward_message(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     await context.bot.forward_message(chat_id=1002384512914, from_chat_id=get_chat_id, message_id=update.message.message_id)
 
 
+# Responses
+
+def handle_response(text:str) -> str:
+    processed:str = text.lower()
+    if 'негр' in processed:
+        return 'bad boy, sent it'
+    
+
 # Message Handler
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -43,3 +51,16 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text: str = update.message.text
 
     print(f'User ({update.message.chat.id}) in {message_type}: "{text}"  username: {user}')
+
+
+    if message_type == 'group':
+        if BOT_USERNAME in text:
+            new_text = text.replace(BOT_USERNAME, '').strip()
+            response: str = handle_response(new_text)
+        else:
+            return
+    else:
+        response: str = handle_response(text)
+
+    print('Bot:', response)
+    await update.message.reply_text(response)
