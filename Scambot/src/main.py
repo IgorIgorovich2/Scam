@@ -1,3 +1,4 @@
+import logging
 from typing import Final
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
@@ -12,6 +13,18 @@ The `BOT_USERNAME` constant holds the username of the Telegram bot, which is use
 TOKEN: Final = '8028581214:AAFrZz_Jqr_pwQQ_nXZXIVBjZPJ-Mx7hJn4'
 BOT_USERNAME: Final = '@ISK_SHEPOT_BOT'
 CHANNEL_ID = -1002384512914
+
+# List to store usernames
+usernames_list = []
+
+# Configure logging
+logging.basicConfig(
+    filename='bot.log',  # Log file name
+    filemode='a',        # Append mode
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO,    # Log level
+    encoding='utf-8'      # Set encoding to UTF-8
+)
 
 # Commands
 """
@@ -85,6 +98,19 @@ async def copy_and_send_message(update: Update, context: ContextTypes.DEFAULT_TY
             chat_id=-1002384512914,
             text=message_text
         )
+
+    # Get the username (if available)
+
+    username = update.message.from_user.username or "No username"
+
+    # Log the message text and username
+
+    logging.info(f'Received message: "{message_text}" from {username} (Chat ID: {update.message.chat.id})')
+
+    # Add the username to the list if not already present
+
+    if username not in usernames_list:
+        usernames_list.append(username)
 
 
 # Responses
